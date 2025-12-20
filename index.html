@@ -15,15 +15,16 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F7F3F0; color: #5D4037; }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F7F3F0; color: #5D4037; -webkit-tap-highlight-color: transparent; }
         .muji-card { background-color: #FFFFFF; border-radius: 24px; box-shadow: 0 4px 15px rgba(93,64,55,0.05); position: relative; }
         .muji-btn { background-color: #8D6E63; color: white; }
         .tab-active { border-bottom: 2px solid #8D6E63; color: #8D6E63; font-weight: 500; }
         input, select, textarea { background-color: #FBF9F7; border: 1px solid #EFEBE9; border-radius: 12px; padding: 14px; outline: none; width: 100%; font-size: 14px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .btn-filter { padding: 6px 16px; border-radius: 20px; font-size: 12px; white-space: nowrap; transition: all 0.2s; }
-        .btn-filter.active { background-color: #8D6E63; color: white; }
-        .btn-filter.inactive { background-color: white; color: #A8A29E; }
+        .btn-filter { padding: 8px 18px; border-radius: 20px; font-size: 12px; white-space: nowrap; transition: all 0.2s; border: 1px solid transparent; }
+        .btn-filter.active { background-color: #8D6E63; color: white; border-color: #8D6E63; }
+        .btn-filter.inactive { background-color: white; color: #A8A29E; border-color: #EFEBE9; }
+        .recipe-content { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen relative pb-28">
@@ -41,7 +42,7 @@
             <div class="flex justify-between items-end mb-6">
                 <div>
                     <h1 class="text-2xl font-medium">健康日誌</h1>
-                    <p class="text-[9px] opacity-40 tracking-[0.2em] mt-1 uppercase">Wellness & Cloud Sync</p>
+                    <p class="text-[9px] opacity-40 tracking-[0.2em] mt-1 uppercase">Unified Cloud Sync</p>
                 </div>
                 <div class="text-right">
                     <div class="text-sm font-bold text-[#8D6E63]">{{ currentTerm }}</div>
@@ -58,22 +59,19 @@
         <section v-if="tab === 'recommend'" class="p-6 space-y-8">
             <div class="bg-[#EAE3DB] p-6 rounded-[30px]">
                 <h2 class="text-base font-bold mb-2 flex items-center gap-2"><i class="fas fa-leaf text-[#8D6E63]"></i> {{ currentTerm }}養生</h2>
-                <p class="text-xs leading-relaxed opacity-70">天寒地凍，宜早睡晚起，保護體內陽氣，多食溫熱食物。</p>
+                <p class="text-xs leading-relaxed opacity-70">天寒地凍，宜早睡晚起，多飲溫熱湯水以養氣血。</p>
             </div>
 
             <div class="space-y-4">
-                <h3 class="text-[10px] font-bold opacity-30 pl-1 uppercase tracking-widest">今日健康中菜</h3>
+                <h3 class="text-[10px] font-bold opacity-30 pl-1 uppercase tracking-widest">今日推薦中菜</h3>
                 <div v-for="dish in dailyDishes" :key="dish.name" class="muji-card p-5 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-1.5 rounded-full bg-[#D7CCC8]"></div>
-                        <div>
-                            <div class="font-medium text-sm">{{ dish.name }}</div>
-                            <div class="text-[10px] opacity-40 mt-0.5">{{ dish.tag }}</div>
-                        </div>
+                    <div>
+                        <div class="font-medium text-sm">{{ dish.name }}</div>
+                        <div class="text-[10px] opacity-40 mt-0.5">{{ dish.tag }}</div>
                     </div>
                     <div class="flex items-center gap-4">
                         <div class="text-xs font-bold text-[#8D6E63]">{{ dish.cal }} kcal</div>
-                        <a :href="'https://www.google.com/search?q=' + dish.name + ' 食譜'" target="_blank" class="text-stone-200"><i class="fas fa-search text-xs"></i></a>
+                        <a :href="'https://www.google.com/search?q=' + dish.name + ' 食譜'" target="_blank" class="text-stone-200"><i class="fas fa-search"></i></a>
                     </div>
                 </div>
             </div>
@@ -92,20 +90,20 @@
 
         <section v-if="tab === 'health'" class="p-6 space-y-6">
             <div class="muji-card p-7">
-                <h2 class="text-sm font-bold mb-6 opacity-40 uppercase tracking-widest">Body Stats</h2>
+                <h2 class="text-sm font-bold mb-6 opacity-40 uppercase tracking-widest">Personal Stats</h2>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <input v-model.number="user.height" type="number" placeholder="身高 cm">
                     <input v-model.number="user.weight" type="number" placeholder="體重 kg">
                 </div>
-                <div class="flex gap-2 mb-6 text-xs">
-                    <button @click="user.gender = 'M'" :class="user.gender === 'M' ? 'muji-btn' : 'bg-stone-50'" class="flex-1 py-3 rounded-xl">男</button>
-                    <button @click="user.gender = 'F'" :class="user.gender === 'F' ? 'muji-btn' : 'bg-stone-50'" class="flex-1 py-3 rounded-xl">女</button>
+                <div class="flex gap-2 mb-6">
+                    <button @click="user.gender = 'M'" :class="user.gender === 'M' ? 'muji-btn' : 'bg-stone-50'" class="flex-1 py-3 rounded-xl text-xs">男</button>
+                    <button @click="user.gender = 'F'" :class="user.gender === 'F' ? 'muji-btn' : 'bg-stone-50'" class="flex-1 py-3 rounded-xl text-xs">女</button>
                 </div>
                 <div v-if="bmi" class="text-center p-6 bg-stone-50 rounded-3xl border border-stone-100">
                     <div class="text-3xl font-light mb-1">{{ bmi }}</div>
                     <div class="text-[10px] font-bold opacity-30 mb-4 uppercase tracking-widest">{{ bmiStatus }}</div>
                     <div class="pt-4 border-t border-stone-200">
-                        <div class="text-xs opacity-50 mb-1">建議每日攝取 (TDEE)</div>
+                        <div class="text-xs opacity-50 mb-1">目標每日攝取 (TDEE)</div>
                         <div class="text-xl font-bold text-[#8D6E63]">{{ recommendedKcal }} kcal</div>
                     </div>
                 </div>
@@ -116,20 +114,39 @@
             <div class="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1">
                 <button @click="filterCuisine = '全部'" :class="filterCuisine === '全部' ? 'active' : 'inactive'" class="btn-filter shadow-sm">全部</button>
                 <button v-for="c in cuisines" :key="c" @click="filterCuisine = c" :class="filterCuisine === c ? 'active' : 'inactive'" class="btn-filter shadow-sm">{{ c }}</button>
-                <button @click="fetchCloudData" class="ml-auto text-stone-300 p-2"><i class="fas fa-sync-alt" :class="{'fa-spin': isLoading}"></i></button>
+                <button @click="fetchCloudData" class="ml-auto text-stone-300 p-2 active:text-[#8D6E63]">
+                    <i class="fas fa-sync-alt" :class="{'fa-spin': isLoading}"></i>
+                </button>
             </div>
 
+            <div v-if="isLoading && recipes.length === 0" class="text-center py-20 opacity-20 text-xs">正在從雲端下載...</div>
+
             <div class="grid gap-6">
-                <div v-for="r in filteredRecipes" :key="r.id" class="muji-card overflow-hidden">
-                    <button @click="deleteRecipe(r.id)" class="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full text-red-300 flex items-center justify-center shadow-sm z-10"><i class="fas fa-trash-alt text-[10px]"></i></button>
+                <div v-for="r in filteredRecipes" :key="r.id" 
+                     @click="r.isExpanded = !r.isExpanded"
+                     class="muji-card overflow-hidden cursor-pointer transition-all active:scale-[0.98]">
+                    
+                    <button @click.stop="deleteRecipe(r.id)" class="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full text-red-200 flex items-center justify-center shadow-sm z-10 active:bg-red-500 active:text-white transition-all">
+                        <i class="fas fa-trash-alt text-[10px]"></i>
+                    </button>
+
                     <img v-if="r.image" :src="r.image" class="w-full h-44 object-cover bg-stone-100">
+                    
                     <div class="p-5">
                         <div class="flex justify-between mb-2">
                             <h3 class="font-medium text-sm">{{ r.title }}</h3>
                             <span class="text-[9px] border px-2 py-0.5 rounded text-stone-300 uppercase font-bold">{{ r.cuisine }}</span>
                         </div>
-                        <div class="text-[10px] text-[#8D6E63] font-bold mb-2">{{ r.calories }} kcal</div>
-                        <p class="text-xs opacity-50 line-clamp-2">{{ r.method }}</p>
+                        <div class="text-[10px] text-[#8D6E63] font-bold mb-3">{{ r.calories }} kcal</div>
+                        
+                        <p class="text-xs leading-relaxed text-stone-500 recipe-content" 
+                           :class="r.isExpanded ? 'whitespace-pre-line' : 'line-clamp-2'">
+                            {{ r.method }}
+                        </p>
+                        
+                        <div class="text-[9px] text-stone-300 mt-4 text-right italic">
+                            {{ r.isExpanded ? '點擊收起 ▲' : '點擊查看詳細步驟 ▼' }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,28 +155,28 @@
         <button @click="showModal = true" class="fixed bottom-10 right-8 w-14 h-14 muji-btn rounded-full shadow-2xl flex items-center justify-center z-30"><i class="fas fa-plus"></i></button>
 
         <div v-if="showModal" class="fixed inset-0 bg-stone-900/10 backdrop-blur-sm z-50 flex items-end">
-            <div class="bg-white w-full rounded-t-[40px] p-8 max-h-[90vh] overflow-y-auto relative">
+            <div class="bg-white w-full rounded-t-[40px] p-8 max-h-[90vh] overflow-y-auto relative shadow-2xl">
                 <div v-if="isSaving" class="absolute inset-0 z-10 bg-white/80 flex flex-col items-center justify-center">
-                    <i class="fas fa-spinner fa-spin text-[#8D6E63] mb-2"></i>
-                    <p class="text-[10px] opacity-40">雲端儲存中...</p>
+                    <i class="fas fa-spinner fa-spin text-[#8D6E63] mb-2 text-xl"></i>
+                    <p class="text-[10px] opacity-40">同步至雲端中...</p>
                 </div>
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="font-bold">新增雲端食譜</h2>
+                    <h2 class="font-bold">新增食譜</h2>
                     <button @click="showModal = false" class="text-2xl opacity-10">&times;</button>
                 </div>
                 <div class="space-y-5">
-                    <div class="h-40 bg-stone-50 rounded-3xl border-2 border-dashed border-stone-100 relative overflow-hidden flex flex-col items-center justify-center">
+                    <div class="h-44 bg-stone-50 rounded-3xl border-2 border-dashed border-stone-100 relative overflow-hidden flex flex-col items-center justify-center text-stone-300">
                         <img v-if="newR.image" :src="newR.image" class="absolute inset-0 w-full h-full object-cover">
-                        <i v-else class="fas fa-camera text-2xl text-stone-200"></i>
+                        <i v-else class="fas fa-camera text-2xl"></i>
                         <input type="file" @change="handleImg" class="absolute inset-0 opacity-0" accept="image/*">
                     </div>
-                    <input v-model="newR.title" @input="estimateKcal" type="text" placeholder="菜名">
+                    <input v-model="newR.title" @input="estimateKcal" type="text" placeholder="菜名 (例如: 西紅柿炒蛋)">
                     <div class="grid grid-cols-2 gap-4">
-                        <select v-model="newR.cuisine"><option v-for="c in cuisines">{{ c }}</option></select>
+                        <select v-model="newR.cuisine"><option v-for="c in cuisines" :key="c">{{ c }}</option></select>
                         <input v-model.number="newR.calories" type="number" placeholder="kcal">
                     </div>
-                    <textarea v-model="newR.method" rows="4" placeholder="食譜步驟..."></textarea>
-                    <button @click="saveToCloud" class="w-full py-4 muji-btn rounded-2xl font-bold">儲存並分享</button>
+                    <textarea v-model="newR.method" rows="5" placeholder="詳細步驟與材料..."></textarea>
+                    <button @click="saveToCloud" class="w-full py-4 muji-btn rounded-2xl font-bold shadow-lg active:scale-95 transition-all">儲存並共享</button>
                 </div>
             </div>
         </div>
@@ -179,7 +196,7 @@ createApp({
         const isLoading = ref(false);
         const isSaving = ref(false);
         const filterCuisine = ref('全部');
-        const cuisines = ['中式', '日式', '韓式', '西式', '東南亞', '其他'];
+        const cuisines = ['中式', '日式', '韓式', '西式', '其他'];
         
         const recipes = ref([]);
         const user = ref(JSON.parse(localStorage.getItem('muji_user_v3') || '{"height":"","weight":"","gender":"F"}'));
@@ -192,8 +209,9 @@ createApp({
             try {
                 const res = await fetch(API_URL);
                 const data = await res.json();
-                recipes.value = data.sheet1.reverse() || [];
-            } catch (e) { console.error("API Error"); }
+                // 獲取後為每項加入 isExpanded 屬性
+                recipes.value = data.sheet1.reverse().map(item => ({...item, isExpanded: false})) || [];
+            } catch (e) { console.error("Cloud Fetch Error"); }
             finally { isLoading.value = false; }
         };
 
@@ -211,12 +229,12 @@ createApp({
                     showModal.value = false;
                     newR.value = { title: '', calories: '', image: '', cuisine: '中式', method: '' };
                 }
-            } catch (e) { alert('儲存失敗'); }
+            } catch (e) { alert('連線失敗，請檢查權限'); }
             finally { isSaving.value = false; }
         };
 
         const deleteRecipe = async (id) => {
-            if (!confirm('確定刪除？')) return;
+            if (!confirm('確定刪除這道共享食譜嗎？')) return;
             try {
                 const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
                 if (res.ok) await fetchCloudData();
@@ -230,8 +248,9 @@ createApp({
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    canvas.width = 250;
-                    canvas.height = img.height * (250 / img.width);
+                    const MAX_WIDTH = 250; 
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * (MAX_WIDTH / img.width);
                     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                     newR.value.image = canvas.toDataURL('image/jpeg', 0.4);
                 };
@@ -241,7 +260,7 @@ createApp({
         };
 
         const estimateKcal = () => {
-            const dict = {'雞':350, '魚':250, '牛':450, '菜':80, '蛋':150};
+            const dict = {'雞':350, '魚':250, '牛':450, '菜':80, '蛋':150, '飯':250, '肉':400};
             for(let k in dict) if(newR.value.title.includes(k)) { newR.value.calories = dict[k]; break; }
         };
 
@@ -262,7 +281,9 @@ createApp({
             bmi: computed(() => (user.value.height && user.value.weight) ? (user.value.weight / Math.pow(user.value.height/100, 2)).toFixed(1) : null),
             bmiStatus: computed(() => {
                 const b = (user.value.weight / Math.pow(user.value.height/100, 2));
-                return b < 18.5 ? '體重過輕' : b < 24 ? '健康範圍' : '體重過重';
+                if(b < 18.5) return '體重過輕';
+                if(b < 24) return '健康範圍';
+                return '體重過重';
             }),
             recommendedKcal: computed(() => Math.round(user.value.gender === 'F' ? (user.value.weight * 22 * 1.3) : (user.value.weight * 24 * 1.3))),
             cuisines, filterCuisine, fetchCloudData, handleImg, saveToCloud, deleteRecipe, estimateKcal,
