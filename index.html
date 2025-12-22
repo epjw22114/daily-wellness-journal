@@ -195,7 +195,7 @@ createApp({
         
         const recipes = ref([]);
         const user = ref(JSON.parse(localStorage.getItem('muji_user_v3') || '{"height":"","weight":"","gender":"F"}'));
-        const newR = ref({ title: '', calories: '', image: '', cuisine: '中式', method: '' });
+        const newR = ref({ title: '', calories: '', cuisine: '中式', method: '', image: '' });
 
         const checkPassword = () => { if(passInput.value === '1234') isUnlocked.value = true; else alert('密碼錯誤'); }
 
@@ -272,7 +272,7 @@ createApp({
                 setTimeout(async () => {
                     await fetchCloudData();
                     showModal.value = false;
-                    newR.value = { title: '', calories: '', image: '', cuisine: '中式', method: '' };
+                    newR.value = { title: '', calories: '', cuisine: '中式', method: '', image: '' };
                     isSaving.value = false;
                 }, 1000);
             } catch (e) { 
