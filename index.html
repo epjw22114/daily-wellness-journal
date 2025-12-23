@@ -190,7 +190,7 @@ createApp({
         const isLoading = ref(false);
         const isSaving = ref(false);
         const filterCuisine = ref('全部');
-        const cuisines = ['中式', '日式', '韓式', '西式', '其他'];
+        const cuisines = ['中式', '日式', '韓式', '西式', '東南亞', '其他'];
         
         const recipes = ref([]);
         const user = ref(JSON.parse(localStorage.getItem('muji_user_v3') || '{"height":"","weight":"","gender":"F"}'));
